@@ -1,24 +1,38 @@
-// Replace this with your real App Store URL once available.
-const APP_STORE_URL = "https://apps.apple.com/us/app/momentum/id0000000000";
+const APP_STORE_URL = "https://apps.apple.com/us/app/id0000000000";
 
-for (const link of document.querySelectorAll("[data-app-store-link]")) {
-  link.setAttribute("href", APP_STORE_URL);
-  link.setAttribute("target", "_blank");
-  link.setAttribute("rel", "noopener noreferrer");
+function wireAppStoreCTAs() {
+  const ctas = document.querySelectorAll("[data-appstore-cta]");
+  ctas.forEach((cta) => {
+    cta.setAttribute("href", APP_STORE_URL);
+    cta.setAttribute("target", "_blank");
+    cta.setAttribute("rel", "noopener noreferrer");
+  });
 }
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("show");
-        observer.unobserve(entry.target);
-      }
-    }
-  },
-  { threshold: 0.14 }
-);
+function setupRevealAnimations() {
+  const nodes = document.querySelectorAll(".reveal");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+  );
 
-for (const block of document.querySelectorAll(".reveal")) {
-  observer.observe(block);
+  nodes.forEach((node, index) => {
+    node.style.transitionDelay = `${Math.min(index * 35, 280)}ms`;
+    observer.observe(node);
+  });
 }
+
+function init() {
+  wireAppStoreCTAs();
+  setupRevealAnimations();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+

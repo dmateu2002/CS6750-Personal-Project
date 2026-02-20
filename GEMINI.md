@@ -1,42 +1,62 @@
-# GEMINI.md
+# Website Maintenance Guide (Momentum Marketing Site)
 
-## Project context
-This `website/` directory contains the marketing site for Momentum (`mntm.io`).
-The iOS app code remains in the repository root and was not moved.
+## Scope
+This folder is a standalone static marketing site for `mntm.io`.
 
-## Site goals
-- Promote the Momentum app with a strong brand voice.
-- Communicate essential launch info quickly.
-- Keep pricing explicitly visible as **Free**.
-- Route all primary call-to-actions to the App Store.
+- No framework
+- No build step
+- No dependency install required
+- Edit files directly and deploy as static assets
 
-## Tech stack
-- Static site: HTML + CSS + vanilla JavaScript.
-- No build step required.
+## Files
+- `index.html`: page structure and content
+- `styles.css`: full design system, layout, and animations
+- `script.js`: behavior and centralized App Store URL
+- `WHAT_I_BUILT.md`: implementation notes and deployment steps
 
-## File map
-- `website/index.html`: page structure and content.
-- `website/styles.css`: visual design, responsive layout, animations.
-- `website/script.js`: App Store URL injection and reveal-on-scroll behavior.
-- `website/WHAT_I_BUILT.md`: detailed implementation notes.
-- `website/BETTER_PROMPT.md`: improved reusable prompt.
+## Critical Rule: App Store URL
+All "Download on the App Store" buttons are wired through:
 
-## Critical editing rule
-If you need to change the App Store destination, edit this constant only:
-- `website/script.js` -> `APP_STORE_URL`
+- `script.js` -> `APP_STORE_URL`
 
-All page buttons with `data-app-store-link` update automatically.
+Only change the URL in one place:
 
-## Content rules
-- Keep messaging concise, tactical, and consistency-focused.
-- Preserve the current value proposition: Win Board, AI Journal, Network.
-- Keep pricing as `Free` unless explicitly changed by the owner.
+```js
+const APP_STORE_URL = "https://apps.apple.com/us/app/idXXXXXXXXXX";
+```
 
-## Design rules
-- Preserve the midnight + cyan + lime visual identity.
-- Keep custom typography (`Space Grotesk`, `IBM Plex Mono`) unless replaced intentionally.
-- Maintain mobile responsiveness and readable contrast.
+Do not hardcode App Store links in HTML.
 
-## Deployment notes
-Any static hosting works (Vercel, Netlify, Cloudflare Pages, GitHub Pages).
-Deploy the `website/` folder contents to `mntm.io`.
+## Content Editing
+Update copy in `index.html`:
+- Hero headline and subheadline in `.hero-copy`
+- Feature descriptions under `#features`
+- FAQ entries under `#faq`
+- Footer brand/domain line
+
+## Design Editing
+Use existing CSS variables in `styles.css` (`:root`) before adding new values:
+- Color tokens: `--bg`, `--surface`, `--accent`, `--text`, etc.
+- Radius/shadow tokens: `--radius`, `--shadow`
+
+Prefer token changes over one-off hardcoded styles.
+
+## Animation Notes
+Reveal animations use:
+- `.reveal` CSS class
+- `setupRevealAnimations()` in `script.js`
+
+If motion must be reduced, keep support for:
+- `@media (prefers-reduced-motion: reduce)`
+
+## Accessibility
+When editing:
+- Keep semantic sectioning (`header`, `main`, `section`, `footer`)
+- Preserve heading order (`h1` -> `h2` -> `h3`)
+- Maintain sufficient contrast
+- Keep the skip link in place
+
+## Deployment
+Deploy the entire `website/` directory as static files to your host.
+Ensure `index.html` is served from the domain root.
+

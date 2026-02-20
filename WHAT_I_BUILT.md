@@ -1,50 +1,122 @@
-# What I Built
+# WHAT I BUILT: Momentum Marketing Website
 
-## 1) New folder structure
-I created a new folder:
-- `website/`
+## Summary
+Built a standalone premium marketing site in `website/` for `mntm.io` using plain HTML/CSS/JS.
 
-This keeps your app code separate from your promo website.
+No iOS app files were modified.
 
-## 2) New marketing website
-I built a complete static landing page with:
-- Hero section and value proposition.
-- Feature highlights based on your app architecture.
-- Pricing section showing `Free`.
-- FAQ section containing necessary launch information.
-- Multiple App Store CTA buttons.
-- Mobile responsive behavior.
-- Reveal-on-scroll animation.
-
-Files:
+## Delivered Files
 - `website/index.html`
 - `website/styles.css`
 - `website/script.js`
+- `website/GEMINI.md`
+- `website/WHAT_I_BUILT.md`
 
-## 3) App Store link handling
-I centralized the App Store link in one place:
+## Detailed Changelog
+
+### 1) Structure (`website/index.html`)
+Implemented a single-page semantic layout:
+- Sticky header with brand, nav links, and App Store CTA
+- Hero section with strong value proposition and tactical visual panel
+- Features section with three app pillars:
+  - Win Board
+  - AI Journal/Scanner
+  - Network
+- Pricing section explicitly set to `Free`
+- FAQ section using native `<details>`/`<summary>` for accessible disclosure
+- Footer with brand/domain and CTA
+- Real Momentum logo assets integrated from app `Logos/` folder:
+  - Header icon
+  - Hero wordmark
+  - Footer icon
+
+Accessibility and semantics included:
+- Skip link (`Skip to content`)
+- Proper `header/main/section/footer` structure
+- Clear heading hierarchy
+- Descriptive labels and readable content structure
+
+### 2) Visual System (`website/styles.css`)
+Built a custom high-end visual style:
+- Custom color token system in `:root`
+- Layered gradients + radial glows + masked grid treatment
+- Distinct tactical typography:
+  - `Space Grotesk` for primary copy
+  - `IBM Plex Mono` for system/data tone
+- Reusable button system and card surfaces
+- Purposeful section contrast and depth
+- Responsive behavior for desktop/tablet/mobile
+
+Motion and UX:
+- Scroll-reveal transitions via `.reveal` classes
+- Reduced-motion fallback with `prefers-reduced-motion`
+- Hover/focus states for interactive elements
+
+### 3) Behavior (`website/script.js`)
+Added maintainable JS behaviors:
+- Centralized App Store URL constant:
+  - `const APP_STORE_URL = "..."`
+- Automatic wiring of all CTA links using `[data-appstore-cta]`
+- IntersectionObserver reveal animation initialization
+
+This ensures every App Store button updates from one URL constant.
+
+## How to Edit
+
+### Update App Store link (single source)
+Edit:
 - `website/script.js`
 
-Edit this line:
-- `const APP_STORE_URL = "https://apps.apple.com/us/app/momentum/id0000000000";`
+Change:
+```js
+const APP_STORE_URL = "https://apps.apple.com/us/app/idXXXXXXXXXX";
+```
 
-After updating it once, all CTA buttons update automatically.
+### Update copy
+Edit:
+- `website/index.html`
 
-## 4) Brand and content choices
-I aligned the site with the app's current direction observed in code:
-- Midnight/cyan style direction from `Core/MomentumTheme.swift`.
-- Core pillars from UI: Win Board, Journal/Scanner, Network.
-- Messaging around consistency and accountability.
+Common areas:
+- Hero headline and subtext
+- Feature copy blocks
+- FAQ questions/answers
+- Footer brand/domain text
 
-## 5) Files added for future AI collaboration
-I added:
-- `website/GEMINI.md`: explicit project instructions for future edits.
-- `website/BETTER_PROMPT.md`: improved prompt template for future requests.
+### Update branding/design
+Edit:
+- `website/styles.css`
 
-## 6) What you should do next
-1. Replace `APP_STORE_URL` in `website/script.js` with your real App Store link.
-2. Optional: Add real screenshots and testimonial quotes in `website/index.html`.
-3. Deploy `website/` to `mntm.io` via your hosting provider.
+Start with `:root` tokens for global updates:
+- Colors
+- Radius
+- Shadow
 
-## 7) Important note
-I did not move or rename existing iOS app files to avoid breaking your current Xcode project.
+### Update logo assets
+Current logo files used by site:
+- `website/assets/logos/momentum-icon.png`
+- `website/assets/logos/momentum-wordmark.png`
+
+To swap logos, replace those files and keep the same names, or update paths in:
+- `website/index.html`
+
+## How to Run Locally
+From repository root:
+
+```bash
+cd website
+python3 -m http.server 8080
+```
+
+Open:
+- `http://localhost:8080`
+
+## Deployment (Static)
+Deploy `website/` as static files on your host.
+
+Minimum required:
+- Serve `index.html` at domain root
+- Serve `styles.css` and `script.js` from same directory
+
+## Notes
+- Current App Store URL is a placeholder in `script.js`.
+- Replace before production launch.
