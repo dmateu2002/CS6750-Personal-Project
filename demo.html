@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Momentum Win Board — CS 6750 Final Prototype</title>
+  <title>The Win Board</title>
   <style>
     /* ==========================================================================
        Midnight Research Design Tokens (Strict Congruency with MomentumTheme.swift)
@@ -242,38 +242,110 @@
       color: var(--bg-navy-deep);
     }
 
-    /* Sub-bar: Rule indicator & switch */
-    .rule-bar {
+    /* Sub-bar: Auto-Win Threshold Controller */
+    .threshold-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 6px 8px;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin-top: 6px;
+    }
+    .threshold-label-wrap {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 4px;
-      font-size: 10px;
-      font-family: var(--font-mono);
-    }
-    .rule-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-dim);
-      font-weight: 700;
-    }
-    .rule-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 8px var(--cyan);
-    }
-    .rule-toggle-btn {
-      background: none;
-      border: none;
-      color: var(--cyan);
       font-family: var(--font-mono);
       font-size: 9px;
+    }
+    .threshold-label {
       font-weight: 700;
-      text-decoration: underline;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+    .threshold-sub {
+      color: var(--cyan);
+      font-size: 8.5px;
+      opacity: 0.9;
+    }
+    .threshold-pill-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .threshold-pill {
+      flex: 1;
+      height: 26px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-smooth);
+    }
+    .threshold-pill:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+      color: var(--text-main);
+    }
+    .threshold-pill.active {
+      background: var(--cyan);
+      color: var(--bg-navy-deep);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
+    }
+    .threshold-custom-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      overflow: hidden;
+      height: 26px;
+      padding: 0 4px;
+      gap: 2px;
+      transition: all var(--transition-smooth);
+    }
+    .threshold-custom-wrap.active {
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
+    }
+    .threshold-pill.custom-btn {
+      border: none;
+      background: none;
+      padding: 0 2px;
+      flex: none;
+      box-shadow: none;
+      font-size: 9.5px;
+    }
+    .threshold-custom-wrap.active .threshold-pill.custom-btn {
+      color: var(--cyan);
+    }
+    .threshold-custom-input {
+      width: 24px;
+      height: 18px;
+      background: var(--bg-navy-deep);
+      border: 1px solid var(--border-subtle);
+      border-radius: 3px;
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+      -moz-appearance: textfield;
+    }
+    .threshold-custom-input::-webkit-outer-spin-button,
+    .threshold-custom-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
 
     /* ==========================================================================
@@ -470,20 +542,16 @@
     .win-badge-pill {
       display: inline-flex;
       align-items: center;
-      gap: 3px;
-      padding: 3px 6px;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
       border-radius: var(--radius-sm);
       background: var(--bg-navy-deep);
       border: 1px solid rgba(255, 215, 0, 0.7);
       color: var(--gold);
-      font-size: 10px;
-      font-family: var(--font-mono);
+      font-size: 13px;
       font-weight: 700;
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
-    }
-    .win-badge-pill.ovr {
-      border-color: var(--cyan);
-      color: var(--cyan);
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.25);
     }
     .win-empty-circle {
       width: 14px;
@@ -912,11 +980,9 @@
 
   <!-- Desktop Presentation Banner -->
   <header class="desktop-header">
-    <div class="desktop-tag">CS 6750 Final Evaluation Prototype (n=27)</div>
-    <h1 class="desktop-title">Momentum Win Board — Synthesized</h1>
+    <h1 class="desktop-title">The Win Board</h1>
     <p class="desktop-subtitle">
-      7-Day Matrix + Daily Focus Zoom + Hybrid N-1 Win Engine + Live Aggregate Telemetry.
-      Interactive zero-dependency simulation.
+      Click any star to log a goal, or click a day to view daily details.
     </p>
   </header>
 
@@ -953,14 +1019,19 @@
           </button>
         </div>
 
-        <div class="rule-bar">
-          <div class="rule-status">
-            <div class="rule-dot" id="rule-dot"></div>
-            <span id="rule-label">RULE: N-1 AUTO + OVERRIDE</span>
+        <div class="threshold-bar">
+          <div class="threshold-label-wrap">
+            <span class="threshold-label">AUTO-WIN THRESHOLD</span>
+            <span class="threshold-sub" id="threshold-status-text">N-1 Goals (Hitting all goals always wins)</span>
           </div>
-          <button class="rule-toggle-btn" id="rule-toggle-btn" onclick="toggleHybridRule()">
-            SWITCH TO STRICT
-          </button>
+          <div class="threshold-pill-group">
+            <button class="threshold-pill" id="thresh-manual" onclick="setThresholdMode('manual')">Manual Only</button>
+            <button class="threshold-pill active" id="thresh-nminus1" onclick="setThresholdMode('nMinus1')">N-1 Goals</button>
+            <div class="threshold-custom-wrap" id="thresh-custom-wrap">
+              <button class="threshold-pill custom-btn" id="thresh-custom" onclick="setThresholdMode('custom')">Custom:</button>
+              <input type="number" id="thresh-custom-input" class="threshold-custom-input" min="1" max="5" value="3" oninput="onCustomThresholdChange(this.value)" />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1008,23 +1079,23 @@
           <button class="add-goal-btn" onclick="addNewGoal()">+ ADD PROTOCOL GOAL</button>
         </div>
 
-        <!-- Prominent Hybrid "Did You Win The Day?" Control -->
+        <!-- Prominent "Did You Win The Day?" Control -->
         <button class="win-day-control" id="daily-win-btn" onclick="toggleWinForSelectedDay()">
           <div class="win-day-icon" id="daily-win-star">★</div>
           <div class="win-day-text-wrap">
             <div class="win-day-title" id="daily-win-title">Did you win the day?</div>
-            <div class="win-day-subtitle" id="daily-win-sub">Tap to claim manual win override</div>
+            <div class="win-day-subtitle" id="daily-win-sub">Tap to mark day as won</div>
           </div>
           <div id="daily-win-badge-slot">
-            <div class="win-day-claim-pill">CLAIM WIN</div>
+            <div class="win-day-claim-pill">MARK WIN</div>
           </div>
         </button>
       </section>
 
-      <!-- TIER 3: PERSISTENT AGGREGATE TELEMETRY FOOTER -->
+      <!-- TIER 3: PERSISTENT PROGRESS FOOTER -->
       <footer class="telemetry-footer">
         <div class="section-label-bar">
-          <span class="section-title">AGGREGATE WIN TELEMETRY</span>
+          <span class="section-title">PROGRESS</span>
         </div>
 
         <div class="telemetry-grid">
@@ -1054,7 +1125,7 @@
         </div>
 
         <div class="demo-controls-bar">
-          <span>n=27 Study Evaluation Synthesis</span>
+          <span></span>
           <button class="demo-reset-btn" onclick="resetSampleData()">Reset Sample Week</button>
         </div>
       </footer>
@@ -1126,26 +1197,38 @@
 
     let currentMode = "matrix"; // "matrix" | "daily"
     let selectedDayIndex = 6; // Default to Sunday (today)
-    let autoNMinusOneEnabled = true;
+    let thresholdMode = "nMinus1"; // "manual" | "nMinus1" | "custom"
+    let customThreshold = 3;
+    let manualWins = new Set([2]); // Wed has manual win initially
+    let manualLosses = new Set();
 
     // Grid data: 7 days x 5 goals (true/false)
     let gridData = [
       [true,  true,  true,  true,  true ], // Mon: 5/5
-      [true,  true,  true,  true,  false], // Tue: 4/5 (N-1 won)
-      [true,  false, true,  false, false], // Wed: 2/5 (manual override won)
+      [true,  true,  true,  true,  false], // Tue: 4/5
+      [true,  false, true,  false, false], // Wed: 2/5 (manual win)
       [true,  true,  true,  true,  true ], // Thu: 5/5
-      [false, true,  true,  true,  true ], // Fri: 4/5 (N-1 won)
-      [false, true,  false, false, true ], // Sat: 2/5 (not won)
-      [true,  true,  false, false, true ]  // Sun: 3/5 (in progress)
+      [false, true,  true,  true,  true ], // Fri: 4/5
+      [false, true,  false, false, true ], // Sat: 2/5
+      [true,  true,  false, false, true ]  // Sun: 3/5
     ];
-
-    // Manual overrides set for day indices
-    let manualOverrides = new Set([2]); // Wed has manual override
 
     // 23 past days data for 30-day monthly telemetry (approx 83%)
     const pastMonthlyWinsCount = 20; // 20 wins out of past 23 days
 
     // --- Core Computation Helpers ---
+    function defaultAutoWon(dayIdx) {
+      const goalsCount = GOALS.length;
+      let completed = 0;
+      for (let g = 0; g < goalsCount; g++) {
+        if (gridData[dayIdx][g]) completed++;
+      }
+      if (goalsCount > 0 && completed === goalsCount) return true; // Hitting all goals always wins!
+      if (thresholdMode === "nMinus1") return completed >= Math.max(1, goalsCount - 1);
+      if (thresholdMode === "custom") return completed >= customThreshold;
+      return false;
+    }
+
     function computeDayStatus(dayIdx) {
       const goalsCount = GOALS.length;
       let completed = 0;
@@ -1153,17 +1236,18 @@
         if (gridData[dayIdx][g]) completed++;
       }
 
-      const threshold = Math.max(1, goalsCount - 1); // N-1 = 4
-      const autoWon = autoNMinusOneEnabled && (completed >= threshold);
-      const manualWon = manualOverrides.has(dayIdx);
-      const isWon = autoWon || manualWon;
+      let isWon = false;
+      if (manualLosses.has(dayIdx)) {
+        isWon = false;
+      } else if (manualWins.has(dayIdx)) {
+        isWon = true;
+      } else {
+        isWon = defaultAutoWon(dayIdx);
+      }
 
       return {
         completed,
         total: goalsCount,
-        threshold,
-        autoWon,
-        manualWon,
         isWon
       };
     }
@@ -1252,41 +1336,80 @@
       renderAll();
     }
 
-    function toggleWinOverride(dayIdx) {
+    function toggleDayWin(dayIdx) {
       AudioEngine.click();
-      const status = computeDayStatus(dayIdx);
-      if (manualOverrides.has(dayIdx)) {
-        manualOverrides.delete(dayIdx);
-      } else if (!status.autoWon) {
-        manualOverrides.add(dayIdx);
+      const current = computeDayStatus(dayIdx);
+      const willBeWon = !current.isWon;
+      const isAuto = defaultAutoWon(dayIdx);
+
+      if (willBeWon) {
+        manualLosses.delete(dayIdx);
+        if (!isAuto) {
+          manualWins.add(dayIdx);
+        } else {
+          manualWins.delete(dayIdx);
+        }
         AudioEngine.win();
+      } else {
+        manualWins.delete(dayIdx);
+        if (isAuto) {
+          manualLosses.add(dayIdx);
+        } else {
+          manualLosses.delete(dayIdx);
+        }
       }
       renderAll();
     }
 
     function toggleWinForSelectedDay() {
-      toggleWinOverride(selectedDayIndex);
+      toggleDayWin(selectedDayIndex);
     }
 
-    function toggleHybridRule() {
-      autoNMinusOneEnabled = !autoNMinusOneEnabled;
+    function setThresholdMode(mode) {
+      thresholdMode = mode;
       AudioEngine.click();
-      const ruleLabel = document.getElementById("rule-label");
-      const ruleToggleBtn = document.getElementById("rule-toggle-btn");
-      const ruleDot = document.getElementById("rule-dot");
-
-      if (autoNMinusOneEnabled) {
-        ruleLabel.textContent = "RULE: N-1 AUTO + OVERRIDE";
-        ruleToggleBtn.textContent = "SWITCH TO STRICT";
-        ruleDot.style.background = "var(--cyan)";
-        ruleDot.style.boxShadow = "0 0 8px var(--cyan)";
-      } else {
-        ruleLabel.textContent = "RULE: STRICT MANUAL OVERRIDE";
-        ruleToggleBtn.textContent = "SWITCH TO N-1";
-        ruleDot.style.background = "var(--gold)";
-        ruleDot.style.boxShadow = "0 0 8px var(--gold)";
-      }
+      updateThresholdUI();
       renderAll();
+    }
+
+    function onCustomThresholdChange(val) {
+      const parsed = parseInt(val, 10);
+      if (!isNaN(parsed) && parsed >= 1 && parsed <= GOALS.length) {
+        customThreshold = parsed;
+        thresholdMode = "custom";
+        updateThresholdUI();
+        renderAll();
+      }
+    }
+
+    function updateThresholdUI() {
+      const btnManual = document.getElementById("thresh-manual");
+      const btnNMinus1 = document.getElementById("thresh-nminus1");
+      const btnCustom = document.getElementById("thresh-custom");
+      const wrapCustom = document.getElementById("thresh-custom-wrap");
+      const inputCustom = document.getElementById("thresh-custom-input");
+      const descText = document.getElementById("threshold-status-text");
+
+      if (inputCustom) {
+        inputCustom.max = GOALS.length;
+        inputCustom.value = customThreshold;
+      }
+
+      [btnManual, btnNMinus1, btnCustom].forEach(b => b && b.classList.remove("active"));
+      wrapCustom && wrapCustom.classList.remove("active");
+
+      if (thresholdMode === "manual") {
+        btnManual && btnManual.classList.add("active");
+        if (descText) descText.textContent = "Manual only (hitting all goals always wins)";
+      } else if (thresholdMode === "nMinus1") {
+        btnNMinus1 && btnNMinus1.classList.add("active");
+        const thresh = Math.max(1, GOALS.length - 1);
+        if (descText) descText.textContent = `≥ ${thresh} of ${GOALS.length} goals auto-wins (all goals always wins)`;
+      } else if (thresholdMode === "custom") {
+        btnCustom && btnCustom.classList.add("active");
+        wrapCustom && wrapCustom.classList.add("active");
+        if (descText) descText.textContent = `≥ ${customThreshold} of ${GOALS.length} goals auto-wins (all goals always wins)`;
+      }
     }
 
     function editGoal(g) {
@@ -1314,6 +1437,7 @@
         for (let d = 0; d < 7; d++) {
           gridData[d].push(false);
         }
+        updateThresholdUI();
         renderAll();
       }
     }
@@ -1337,11 +1461,12 @@
         [false, true,  false, false, true ],
         [true,  true,  false, false, true ]
       ];
-      manualOverrides = new Set([2]);
+      manualWins = new Set([2]);
+      manualLosses.clear();
+      thresholdMode = "nMinus1";
+      customThreshold = 3;
       selectedDayIndex = 6;
-      autoNMinusOneEnabled = true;
-      toggleHybridRule();
-      if (!autoNMinusOneEnabled) toggleHybridRule();
+      updateThresholdUI();
       renderAll();
     }
 
@@ -1375,11 +1500,7 @@
 
         let winHtml = `<div class="win-empty-circle"></div>`;
         if (status.isWon) {
-          if (status.manualWon) {
-            winHtml = `<span class="win-badge-pill ovr">★ OVR</span>`;
-          } else {
-            winHtml = `<span class="win-badge-pill">★ WON</span>`;
-          }
+          winHtml = `<span class="win-badge-pill">★</span>`;
         }
 
         return `
@@ -1391,7 +1512,7 @@
             <div class="matrix-row-goals">
               ${starsHtml}
             </div>
-            <button class="matrix-win-cell" onclick="toggleWinOverride(${d})" title="Toggle win status for ${day}">
+            <button class="matrix-win-cell" onclick="toggleDayWin(${d})" title="Toggle win status for ${day}">
               ${winHtml}
             </button>
           </div>
@@ -1454,18 +1575,13 @@
       if (status.isWon) {
         winBtn.classList.add("won");
         winTitle.textContent = "Day Won ★";
-        if (status.autoWon) {
-          winSub.textContent = `Target Met (${status.completed}/${status.total} Goals Completed)`;
-          badgeSlot.innerHTML = `<div class="win-day-status-pill">✓ AUTO WIN</div>`;
-        } else {
-          winSub.textContent = `Manual Override Active (Tap to remove)`;
-          badgeSlot.innerHTML = `<div class="win-day-status-pill" style="color:var(--gold);border-color:rgba(255,215,0,0.4)">✓ OVERRIDE</div>`;
-        }
+        winSub.textContent = `${status.completed}/${status.total} goals completed`;
+        badgeSlot.innerHTML = `<div class="win-day-claim-pill active">WON ★</div>`;
       } else {
         winBtn.classList.remove("won");
         winTitle.textContent = "Did you win the day?";
-        winSub.textContent = `${status.completed}/${status.total} goals met • Tap to claim manual override`;
-        badgeSlot.innerHTML = `<div class="win-day-claim-pill">CLAIM WIN</div>`;
+        winSub.textContent = `${status.completed}/${status.total} goals completed • Tap to mark won`;
+        badgeSlot.innerHTML = `<div class="win-day-claim-pill">MARK WIN</div>`;
       }
     }
 
@@ -1500,6 +1616,7 @@
     setInterval(updateClock, 30000);
 
     // Initial render
+    updateThresholdUI();
     renderAll();
   </script>
 </body>
