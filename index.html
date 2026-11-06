@@ -1,226 +1,1506 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Momentum: a tactical consistency system to win your day with clarity, discipline, and momentum."
-    />
-    <title>Momentum | Tactical Consistency System</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Momentum Win Board — CS 6750 Final Prototype</title>
+  <style>
+    /* ==========================================================================
+       Midnight Research Design Tokens (Strict Congruency with MomentumTheme.swift)
+       ========================================================================== */
+    :root {
+      --bg-outer: #07090e;
+      --bg-canvas: #0d1117;
+      --bg-card: #161b22;
+      --bg-card-subtle: #0d1525;
+      --bg-navy-deep: #050811;
+      --border-subtle: #21262d;
+      --border-highlight: rgba(0, 229, 255, 0.28);
+      --border-glow: rgba(0, 229, 255, 0.6);
+      --cyan: #00e5ff;
+      --cyan-dim: rgba(0, 229, 255, 0.15);
+      --gold: #ffd700;
+      --gold-dim: rgba(255, 215, 0, 0.18);
+      --gold-glow: rgba(255, 215, 0, 0.45);
+      --text-main: #f0f6fc;
+      --text-dim: #7d8590;
+      --text-muted: #484f58;
+      --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-device: 54px;
+      --transition-spring: 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --transition-smooth: 0.22s ease;
+    }
 
-    <header class="site-header">
-      <div class="container nav-wrap">
-        <a href="#" class="brand" aria-label="Momentum home">
-          <img
-            class="brand-icon"
-            src="./assets/logos/momentum-icon.png"
-            alt="Momentum logo icon"
-            width="32"
-            height="32"
-          />
-          <span class="brand-text">Momentum</span>
-        </a>
-        <nav aria-label="Primary navigation">
-          <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#faq">FAQ</a></li>
-          </ul>
-        </nav>
-        <a data-appstore-cta class="btn btn-small btn-primary" href="#">
-          Download on the App Store
-        </a>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-outer);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background-image: 
+        radial-gradient(ellipse at 50% 0%, rgba(0, 229, 255, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 10% 90%, rgba(255, 215, 0, 0.04) 0%, transparent 40%);
+    }
+
+    /* Ambient Banner on Desktop */
+    .desktop-header {
+      text-align: center;
+      margin-bottom: 20px;
+      max-width: 620px;
+    }
+    .desktop-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .desktop-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .desktop-subtitle {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       iPhone 16 Pro Viewport Mockup Container
+       ========================================================================== */
+    .device-frame {
+      width: 402px;
+      height: 844px;
+      background: var(--bg-canvas);
+      border-radius: var(--radius-device);
+      box-shadow: 
+        0 0 0 12px #1f2328,
+        0 0 0 14px #2d333b,
+        0 24px 60px rgba(0, 0, 0, 0.8),
+        0 0 50px rgba(0, 229, 255, 0.12);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 122px;
+      height: 35px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+    .island-camera {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #0c1222;
+      border: 1px solid #1c2738;
+    }
+    .island-sensor {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #111;
+    }
+
+    /* iOS Status Bar */
+    .status-bar {
+      height: 48px;
+      padding: 14px 28px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      z-index: 50;
+    }
+    .status-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    /* Scrollable App Viewport */
+    .app-screen {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 8px 16px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+    .app-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Home Indicator */
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 2px;
+      z-index: 100;
+    }
+
+    /* ==========================================================================
+       Component: Top View-Mode Segmented Control
+       ========================================================================== */
+    .mode-selector-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .segmented-control {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg-card);
+      padding: 3px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+    .segmented-slider {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      left: 3px;
+      width: calc(50% - 3px);
+      background: var(--cyan);
+      border-radius: var(--radius-sm);
+      transition: transform var(--transition-spring);
+      z-index: 1;
+      box-shadow: 0 2px 10px rgba(0, 229, 255, 0.35);
+    }
+    .segmented-btn {
+      position: relative;
+      z-index: 2;
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: color var(--transition-smooth);
+    }
+    .segmented-btn.active {
+      color: var(--bg-navy-deep);
+    }
+
+    /* Sub-bar: Rule indicator & switch */
+    .rule-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+    }
+    .rule-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+    .rule-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+    .rule-toggle-btn {
+      background: none;
+      border: none;
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       View Mode A: 7-Day Matrix Grid
+       ========================================================================== */
+    .matrix-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .section-label-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2px;
+      font-family: var(--font-mono);
+    }
+    .section-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+    .section-hint {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--cyan);
+      opacity: 0.85;
+      letter-spacing: 0.05em;
+    }
+
+    .matrix-table-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .matrix-header-row {
+      display: flex;
+      background: rgba(5, 8, 17, 0.95);
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    }
+    .matrix-day-th {
+      width: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-dim);
+      border-right: 1px solid var(--border-subtle);
+      height: 38px;
+    }
+    .matrix-goals-scroll-th {
+      flex: 1;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .matrix-goals-scroll-th::-webkit-scrollbar { display: none; }
+    .matrix-goal-col-th {
+      width: 72px;
+      flex-shrink: 0;
+      padding: 4px 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-right: 1px solid var(--border-subtle);
+      text-align: center;
+      height: 38px;
+    }
+    .matrix-goal-col-title {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 66px;
+    }
+    .matrix-goal-col-dur {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      color: var(--cyan);
+    }
+    .matrix-win-th {
+      width: 52px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold);
+      height: 38px;
+    }
+
+    /* Day Rows */
+    .matrix-row {
+      display: flex;
+      border-bottom: 1px solid rgba(33, 38, 45, 0.6);
+      transition: background 0.15s ease;
+    }
+    .matrix-row:last-child {
+      border-bottom: none;
+    }
+    .matrix-row.is-today {
+      background: rgba(0, 229, 255, 0.04);
+    }
+    .matrix-day-btn {
+      width: 48px;
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 8px 0;
+      transition: background var(--transition-smooth);
+    }
+    .matrix-day-btn:hover {
+      background: rgba(0, 229, 255, 0.1);
+    }
+    .matrix-day-code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .matrix-day-btn.today .matrix-day-code {
+      color: var(--cyan);
+    }
+    .matrix-day-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--cyan);
+    }
+    .matrix-row-goals {
+      flex: 1;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .matrix-row-goals::-webkit-scrollbar { display: none; }
+    .matrix-star-cell {
+      width: 72px;
+      flex-shrink: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border-subtle);
+      cursor: pointer;
+      background: none;
+      border-top: none;
+      border-bottom: none;
+      border-left: none;
+    }
+    .star-icon {
+      font-size: 16px;
+      color: rgba(125, 133, 144, 0.25);
+      transition: all var(--transition-spring);
+    }
+    .matrix-star-cell.active .star-icon {
+      color: var(--gold);
+      text-shadow: 0 0 10px var(--gold-glow);
+      transform: scale(1.15);
+    }
+
+    .matrix-win-cell {
+      width: 52px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .win-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 6px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-navy-deep);
+      border: 1px solid rgba(255, 215, 0, 0.7);
+      color: var(--gold);
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+    }
+    .win-badge-pill.ovr {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .win-empty-circle {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(125, 133, 144, 0.4);
+    }
+
+    /* ==========================================================================
+       View Mode B: Daily Focus (Vertical 3-Column + Date Pills)
+       ========================================================================== */
+    .daily-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    /* Date-Selector Pill Bar */
+    .date-pill-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 2px 0;
+    }
+    .date-pill-bar::-webkit-scrollbar { display: none; }
+    .date-pill {
+      flex: 1;
+      min-width: 44px;
+      height: 44px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      transition: all var(--transition-smooth);
+    }
+    .date-pill:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+    }
+    .date-pill.active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 2px 10px rgba(0, 229, 255, 0.35);
+    }
+    .date-pill-day {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+    .date-pill.active .date-pill-day {
+      color: var(--bg-navy-deep);
+    }
+    .date-pill.is-today .date-pill-day {
+      color: var(--cyan);
+    }
+    .date-pill.active.is-today .date-pill-day {
+      color: var(--bg-navy-deep);
+    }
+    .date-pill-win-icon {
+      font-size: 8px;
+      color: var(--gold);
+    }
+    .date-pill.active .date-pill-win-icon {
+      color: var(--bg-navy-deep);
+    }
+
+    /* 3-Column Goals Card */
+    .daily-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+    }
+    .daily-table-header {
+      display: grid;
+      grid-template-columns: 1fr 54px 64px;
+      padding: 10px 14px;
+      background: rgba(5, 8, 17, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+    .daily-th-status { text-align: center; }
+    .daily-th-streak { text-align: right; color: var(--cyan); }
+
+    .daily-goal-row {
+      display: grid;
+      grid-template-columns: 1fr 54px 64px;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: background var(--transition-smooth);
+    }
+    .daily-goal-row:last-child { border-bottom: none; }
+    .daily-goal-row:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .daily-goal-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .daily-goal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .daily-goal-idx {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(125, 133, 144, 0.6);
+    }
+    .daily-goal-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .editable {
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .editable:hover {
+      color: var(--cyan) !important;
+    }
+    .edit-icon {
+      font-size: 10px;
+      color: var(--cyan);
+      opacity: 0.6;
+      margin-left: 4px;
+    }
+    .add-goal-btn {
+      width: calc(100% - 24px);
+      margin: 8px 12px 10px;
+      padding: 8px 12px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px dashed rgba(0, 229, 255, 0.35);
+      border-radius: var(--radius-sm);
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      display: block;
+    }
+    .add-goal-btn:hover {
+      background: rgba(0, 229, 255, 0.12);
+      border-color: var(--cyan);
+    }
+    .daily-goal-dur {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--cyan);
+      margin-left: 20px;
+    }
+
+    .daily-star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+    }
+    .daily-star-btn .star-icon {
+      font-size: 22px;
+    }
+    .daily-star-btn.active .star-icon {
+      color: var(--gold);
+      text-shadow: 0 0 12px var(--gold-glow);
+      transform: scale(1.18);
+    }
+
+    .daily-streak-badge {
+      justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 7px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--bg-navy-deep);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-dim);
+    }
+    .daily-streak-badge.active {
+      border-color: rgba(0, 229, 255, 0.4);
+      color: var(--text-main);
+    }
+    .daily-streak-badge.active span {
+      color: var(--gold);
+    }
+
+    /* ==========================================================================
+       Component: Prominent Hybrid "Did You Win The Day?" Button
+       ========================================================================== */
+    .win-day-control {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all var(--transition-smooth);
+    }
+    .win-day-control:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+    }
+    .win-day-control.won {
+      background: var(--bg-card-subtle);
+      border-color: rgba(0, 229, 255, 0.85);
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.15);
+    }
+    .win-day-icon {
+      font-size: 24px;
+      color: rgba(125, 133, 144, 0.4);
+      transition: all var(--transition-spring);
+    }
+    .win-day-control.won .win-day-icon {
+      color: var(--gold);
+      text-shadow: 0 0 12px var(--gold-glow);
+      transform: scale(1.15);
+    }
+    .win-day-text-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .win-day-title {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .win-day-control.won .win-day-title {
+      color: var(--cyan);
+    }
+    .win-day-subtitle {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+    .win-day-status-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-navy-deep);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .win-day-claim-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 229, 255, 0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 229, 255, 0.4);
+    }
+
+    /* ==========================================================================
+       Component: Persistent Aggregate Telemetry Footer
+       ========================================================================== */
+    .telemetry-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .telemetry-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .telemetry-header {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+    .telemetry-val-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .telemetry-pct {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .telemetry-pct.cyan { color: var(--cyan); }
+    .telemetry-pct.gold { color: var(--gold); }
+    .telemetry-sub {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-dim);
+    }
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width var(--transition-spring);
+    }
+    .progress-fill.cyan {
+      background: var(--cyan);
+      box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+    }
+    .progress-fill.gold {
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    /* Footer Meta / Demo Reset Controls */
+    .demo-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 4px 0;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+    .demo-reset-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .demo-reset-btn:hover { color: var(--cyan); }
+
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes popAnim {
+      0% { transform: scale(0.9); }
+      50% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+    .pop {
+      animation: popAnim 0.22s ease-out;
+    }
+
+    /* ==========================================================================
+       Responsive: Edge-to-Edge on Mobile Viewports
+       ========================================================================== */
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+        justify-content: flex-start;
+        background: var(--bg-canvas);
+      }
+      .desktop-header {
+        display: none;
+      }
+      .device-frame {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+      }
+      .dynamic-island {
+        display: none;
+      }
+      .home-indicator {
+        bottom: 4px;
+      }
+      .status-bar {
+        padding-top: 8px;
+        height: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop Presentation Banner -->
+  <header class="desktop-header">
+    <div class="desktop-tag">CS 6750 Final Evaluation Prototype (n=27)</div>
+    <h1 class="desktop-title">Momentum Win Board — Synthesized</h1>
+    <p class="desktop-subtitle">
+      7-Day Matrix + Daily Focus Zoom + Hybrid N-1 Win Engine + Live Aggregate Telemetry.
+      Interactive zero-dependency simulation.
+    </p>
+  </header>
+
+  <!-- iPhone 16 Pro Viewport Container -->
+  <div class="device-frame">
+    <!-- Dynamic Island -->
+    <div class="dynamic-island">
+      <div class="island-camera"></div>
+      <div class="island-sensor"></div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span id="current-time">9:41</span>
+      <div class="status-icons">
+        <span>5G</span>
+        <span>􀛨</span>
+        <span>100%</span>
       </div>
-    </header>
+    </div>
 
-    <main id="main-content">
-      <section class="hero section">
-        <div class="hero-bg-grid" aria-hidden="true"></div>
-        <div class="hero-glow hero-glow-a" aria-hidden="true"></div>
-        <div class="hero-glow hero-glow-b" aria-hidden="true"></div>
-        <div class="container hero-layout">
-          <div class="hero-copy reveal">
-            <img
-              class="hero-wordmark"
-              src="./assets/logos/momentum-wordmark.png"
-              alt="Momentum"
-              loading="eager"
-            />
-            <p class="eyebrow">mntm.io</p>
-            <h1>Build consistency you can measure.</h1>
-            <p class="lede">
-              Momentum is your tactical operating system for daily execution:
-              lock your priorities, scan your progress, and keep winning.
-            </p>
-            <div class="cta-row">
-              <a data-appstore-cta class="btn btn-primary" href="#"
-                >Download on the App Store</a
-              >
-              <a class="btn btn-ghost" href="#features">See how it works</a>
+    <!-- Active App Screen -->
+    <main class="app-screen">
+
+      <!-- TIER 1: TOP MODE SEGMENTED CONTROL & RULE STATUS -->
+      <section class="mode-selector-wrap">
+        <div class="segmented-control">
+          <div class="segmented-slider" id="mode-slider"></div>
+          <button class="segmented-btn active" id="btn-mode-matrix" onclick="setViewMode('matrix')">
+            <span>⊞</span> 7-DAY MATRIX
+          </button>
+          <button class="segmented-btn" id="btn-mode-daily" onclick="setViewMode('daily')">
+            <span>☰</span> DAILY FOCUS
+          </button>
+        </div>
+
+        <div class="rule-bar">
+          <div class="rule-status">
+            <div class="rule-dot" id="rule-dot"></div>
+            <span id="rule-label">RULE: N-1 AUTO + OVERRIDE</span>
+          </div>
+          <button class="rule-toggle-btn" id="rule-toggle-btn" onclick="toggleHybridRule()">
+            SWITCH TO STRICT
+          </button>
+        </div>
+      </section>
+
+      <!-- VIEW MODE A: 7-DAY MATRIX GRID -->
+      <section class="matrix-section" id="view-matrix">
+        <div class="section-label-bar">
+          <span class="section-title">WEEK OVERVIEW</span>
+          <span class="section-hint">TAP ANY DAY LABEL TO ZOOM ➔</span>
+        </div>
+
+        <div class="matrix-table-card">
+          <!-- Table Header -->
+          <div class="matrix-header-row">
+            <div class="matrix-day-th">DAY</div>
+            <div class="matrix-goals-scroll-th" id="matrix-goals-header">
+              <!-- Dynamically populated goal headers -->
             </div>
-            <ul class="signal-row" aria-label="Key metrics">
-              <li><span>Offline-first</span></li>
-              <li><span>On-device AI support</span></li>
-              <li><span>Built for discipline</span></li>
-            </ul>
+            <div class="matrix-win-th">WIN</div>
           </div>
-          <div class="hero-panel reveal" aria-label="Momentum tactical board preview">
-            <div class="panel-head">
-              <span>TACTICAL BOARD</span>
-              <span class="status-chip">LIVE</span>
+
+          <!-- 7 Day Rows (Mon .. Sun) -->
+          <div id="matrix-rows-container">
+            <!-- Dynamically populated day rows -->
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW MODE B: DAILY FOCUS (Vertical 3-Column + Date Pills) -->
+      <section class="daily-section" id="view-daily" style="display: none;">
+        <!-- Horizontal Date-Selector Pill Bar -->
+        <div class="date-pill-bar" id="daily-date-pills">
+          <!-- Dynamically populated date pills -->
+        </div>
+
+        <!-- 3-Column Goals Card -->
+        <div class="daily-card">
+          <div class="daily-table-header">
+            <div>GOAL / TARGET</div>
+            <div class="daily-th-status">STATUS</div>
+            <div class="daily-th-streak">STREAK</div>
+          </div>
+          <div id="daily-goals-container">
+            <!-- Dynamically populated goal rows -->
+          </div>
+          <button class="add-goal-btn" onclick="addNewGoal()">+ ADD PROTOCOL GOAL</button>
+        </div>
+
+        <!-- Prominent Hybrid "Did You Win The Day?" Control -->
+        <button class="win-day-control" id="daily-win-btn" onclick="toggleWinForSelectedDay()">
+          <div class="win-day-icon" id="daily-win-star">★</div>
+          <div class="win-day-text-wrap">
+            <div class="win-day-title" id="daily-win-title">Did you win the day?</div>
+            <div class="win-day-subtitle" id="daily-win-sub">Tap to claim manual win override</div>
+          </div>
+          <div id="daily-win-badge-slot">
+            <div class="win-day-claim-pill">CLAIM WIN</div>
+          </div>
+        </button>
+      </section>
+
+      <!-- TIER 3: PERSISTENT AGGREGATE TELEMETRY FOOTER -->
+      <footer class="telemetry-footer">
+        <div class="section-label-bar">
+          <span class="section-title">AGGREGATE WIN TELEMETRY</span>
+        </div>
+
+        <div class="telemetry-grid">
+          <!-- Weekly Win Card -->
+          <div class="telemetry-card">
+            <div class="telemetry-header">WEEKLY WIN RATE</div>
+            <div class="telemetry-val-row">
+              <span class="telemetry-pct cyan" id="telemetry-weekly-pct">71%</span>
+              <span class="telemetry-sub" id="telemetry-weekly-sub">5/7 Days Won</span>
             </div>
-            <div class="board">
-              <div class="board-row">
-                <span>Training</span><span class="dot complete"></span>
-              </div>
-              <div class="board-row">
-                <span>Deep Work</span><span class="dot complete"></span>
-              </div>
-              <div class="board-row">
-                <span>Journal</span><span class="dot partial"></span>
-              </div>
-              <div class="board-row">
-                <span>Recovery</span><span class="dot pending"></span>
-              </div>
+            <div class="progress-track">
+              <div class="progress-fill cyan" id="telemetry-weekly-bar" style="width: 71%;"></div>
             </div>
-            <p class="panel-foot">Win Threshold: 3 / 4</p>
           </div>
-        </div>
-      </section>
 
-      <section class="section app-preview">
-        <div class="container">
-          <div class="section-head reveal">
-            <p class="eyebrow">In App</p>
-            <h2>Built for focused execution.</h2>
-          </div>
-          <div class="preview-grid">
-            <figure class="preview-card reveal">
-              <img
-                src="./assets/screenshots/momentum-01.png"
-                alt="Momentum app screen preview in iOS Simulator"
-                loading="lazy"
-              />
-            </figure>
-            <figure class="preview-card reveal">
-              <img
-                src="./assets/screenshots/momentum-02.png"
-                alt="Momentum app screen showing tactical interface"
-                loading="lazy"
-              />
-            </figure>
+          <!-- Monthly Win Card -->
+          <div class="telemetry-card">
+            <div class="telemetry-header">MONTHLY WIN RATE</div>
+            <div class="telemetry-val-row">
+              <span class="telemetry-pct gold" id="telemetry-monthly-pct">83%</span>
+              <span class="telemetry-sub" id="telemetry-monthly-sub">25/30 Days Won</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill gold" id="telemetry-monthly-bar" style="width: 83%;"></div>
+            </div>
           </div>
         </div>
-      </section>
 
-      <section id="features" class="section section-dark">
-        <div class="container">
-          <div class="section-head reveal">
-            <p class="eyebrow">Core System</p>
-            <h2>Three pillars. One daily protocol.</h2>
-          </div>
-          <div class="feature-grid">
-            <article class="feature-card reveal">
-              <h3>Win Board</h3>
-              <p>
-                Convert intentions into visible execution. Track your daily goals with a board
-                designed for clarity, accountability, and streak momentum.
-              </p>
-            </article>
-            <article class="feature-card reveal">
-              <h3>AI Journal & Scanner</h3>
-              <p>
-                Capture your day fast. Use scanner workflows and AI-assisted reflection to turn
-                raw notes into useful signal, without breaking focus.
-              </p>
-            </article>
-            <article class="feature-card reveal">
-              <h3>Network</h3>
-              <p>
-                Build consistency with trusted people. Add friends, share progress, and stay
-                aligned through social accountability.
-              </p>
-            </article>
-          </div>
+        <div class="demo-controls-bar">
+          <span>n=27 Study Evaluation Synthesis</span>
+          <button class="demo-reset-btn" onclick="resetSampleData()">Reset Sample Week</button>
         </div>
-      </section>
+      </footer>
 
-      <section id="pricing" class="section pricing">
-        <div class="container pricing-wrap reveal">
-          <p class="eyebrow">Pricing</p>
-          <h2>Free</h2>
-          <p class="price-sub">No paywall. No trial traps. Just execution.</p>
-          <a data-appstore-cta class="btn btn-primary" href="#"
-            >Download on the App Store</a
-          >
-        </div>
-      </section>
-
-      <section id="faq" class="section section-dark">
-        <div class="container">
-          <div class="section-head reveal">
-            <p class="eyebrow">FAQ</p>
-            <h2>What people ask before they commit</h2>
-          </div>
-          <div class="faq-list">
-            <details class="faq-item reveal">
-              <summary>Is Momentum really free?</summary>
-              <p>Yes. Momentum is currently free to download and use.</p>
-            </details>
-            <details class="faq-item reveal">
-              <summary>Does it work offline?</summary>
-              <p>
-                Yes. The app is designed around offline-first behavior so your daily system keeps
-                running even without network access.
-              </p>
-            </details>
-            <details class="faq-item reveal">
-              <summary>What does “AI Journal & Scanner” mean?</summary>
-              <p>
-                You can scan and process journal content quickly and use AI-assisted workflows to
-                organize and reflect on your notes.
-              </p>
-            </details>
-            <details class="faq-item reveal">
-              <summary>Who is Momentum for?</summary>
-              <p>
-                People who want a tactical, consistency-first routine for work, training, and life.
-              </p>
-            </details>
-          </div>
-        </div>
-      </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="container footer-wrap">
-        <p class="footer-brand">
-          <img
-            class="footer-icon"
-            src="./assets/logos/momentum-icon.png"
-            alt=""
-            width="18"
-            height="18"
-          />
-          <strong>Momentum</strong> | mntm.io
-        </p>
-        <a data-appstore-cta class="btn btn-small btn-primary" href="#">
-          Download on the App Store
-        </a>
-      </div>
-    </footer>
+    <!-- Home Indicator -->
+    <div class="home-indicator"></div>
+  </div>
 
-    <script src="./script.js"></script>
-  </body>
+  <!-- Interactive Simulation Engine -->
+  <script>
+    // --- Audio Haptic Synthesizer (Web Audio API) ---
+    const AudioEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      },
+      click() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(300, this.ctx.currentTime + 0.04);
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.04);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.04);
+        } catch(e) {}
+      },
+      win() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(freq, now + i * 0.06);
+            gain.gain.setValueAtTime(0.18, now + i * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.22);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + i * 0.06);
+            osc.stop(now + i * 0.06 + 0.22);
+          });
+        } catch(e) {}
+      }
+    };
+
+    // --- State Model ---
+    const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const GOALS = [
+      { id: 0, title: "OMSCS Study", duration: "2h" },
+      { id: 1, title: "Run / Gym", duration: "45m" },
+      { id: 2, title: "Reading", duration: "30m" },
+      { id: 3, title: "Coding", duration: "1.5h" },
+      { id: 4, title: "Hydration", duration: "3L" }
+    ];
+
+    let currentMode = "matrix"; // "matrix" | "daily"
+    let selectedDayIndex = 6; // Default to Sunday (today)
+    let autoNMinusOneEnabled = true;
+
+    // Grid data: 7 days x 5 goals (true/false)
+    let gridData = [
+      [true,  true,  true,  true,  true ], // Mon: 5/5
+      [true,  true,  true,  true,  false], // Tue: 4/5 (N-1 won)
+      [true,  false, true,  false, false], // Wed: 2/5 (manual override won)
+      [true,  true,  true,  true,  true ], // Thu: 5/5
+      [false, true,  true,  true,  true ], // Fri: 4/5 (N-1 won)
+      [false, true,  false, false, true ], // Sat: 2/5 (not won)
+      [true,  true,  false, false, true ]  // Sun: 3/5 (in progress)
+    ];
+
+    // Manual overrides set for day indices
+    let manualOverrides = new Set([2]); // Wed has manual override
+
+    // 23 past days data for 30-day monthly telemetry (approx 83%)
+    const pastMonthlyWinsCount = 20; // 20 wins out of past 23 days
+
+    // --- Core Computation Helpers ---
+    function computeDayStatus(dayIdx) {
+      const goalsCount = GOALS.length;
+      let completed = 0;
+      for (let g = 0; g < goalsCount; g++) {
+        if (gridData[dayIdx][g]) completed++;
+      }
+
+      const threshold = Math.max(1, goalsCount - 1); // N-1 = 4
+      const autoWon = autoNMinusOneEnabled && (completed >= threshold);
+      const manualWon = manualOverrides.has(dayIdx);
+      const isWon = autoWon || manualWon;
+
+      return {
+        completed,
+        total: goalsCount,
+        threshold,
+        autoWon,
+        manualWon,
+        isWon
+      };
+    }
+
+    function calculateStreakForGoal(goalIdx) {
+      let streak = 0;
+      // Count backwards from today (day index 6)
+      for (let d = 6; d >= 0; d--) {
+        if (gridData[d][goalIdx]) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+      // Add simulated prior streak if continuous
+      if (streak === 7) streak += 5;
+      else if (streak >= 3) streak += 2;
+      return streak;
+    }
+
+    function computeAggregateStats() {
+      let weekWins = 0;
+      for (let d = 0; d < 7; d++) {
+        if (computeDayStatus(d).isWon) weekWins++;
+      }
+      const weeklyPct = Math.round((weekWins / 7) * 100);
+
+      const totalMonthlyWins = weekWins + pastMonthlyWinsCount;
+      const totalMonthlyDays = 30;
+      const monthlyPct = Math.round((totalMonthlyWins / totalMonthlyDays) * 100);
+
+      return {
+        weekWins,
+        weeklyPct,
+        totalMonthlyWins,
+        monthlyPct
+      };
+    }
+
+    // --- User Actions ---
+    function setViewMode(mode) {
+      currentMode = mode;
+      const slider = document.getElementById("mode-slider");
+      const btnMatrix = document.getElementById("btn-mode-matrix");
+      const btnDaily = document.getElementById("btn-mode-daily");
+      const viewMatrix = document.getElementById("view-matrix");
+      const viewDaily = document.getElementById("view-daily");
+
+      if (mode === "matrix") {
+        slider.style.transform = "translateX(0)";
+        btnMatrix.classList.add("active");
+        btnDaily.classList.remove("active");
+        viewMatrix.style.display = "flex";
+        viewDaily.style.display = "none";
+      } else {
+        slider.style.transform = "translateX(100%)";
+        btnDaily.classList.add("active");
+        btnMatrix.classList.remove("active");
+        viewDaily.style.display = "flex";
+        viewMatrix.style.display = "none";
+      }
+      AudioEngine.click();
+      renderAll();
+    }
+
+    function zoomToDay(dayIdx) {
+      selectedDayIndex = dayIdx;
+      setViewMode("daily");
+    }
+
+    function selectDailyDay(dayIdx) {
+      selectedDayIndex = dayIdx;
+      AudioEngine.click();
+      renderDailyFocus();
+    }
+
+    function toggleStar(dayIdx, goalIdx, el) {
+      AudioEngine.click();
+      gridData[dayIdx][goalIdx] = !gridData[dayIdx][goalIdx];
+      if (el) {
+        el.classList.add("pop");
+        setTimeout(() => el.classList.remove("pop"), 220);
+      }
+      const status = computeDayStatus(dayIdx);
+      if (status.isWon) AudioEngine.win();
+      renderAll();
+    }
+
+    function toggleWinOverride(dayIdx) {
+      AudioEngine.click();
+      const status = computeDayStatus(dayIdx);
+      if (manualOverrides.has(dayIdx)) {
+        manualOverrides.delete(dayIdx);
+      } else if (!status.autoWon) {
+        manualOverrides.add(dayIdx);
+        AudioEngine.win();
+      }
+      renderAll();
+    }
+
+    function toggleWinForSelectedDay() {
+      toggleWinOverride(selectedDayIndex);
+    }
+
+    function toggleHybridRule() {
+      autoNMinusOneEnabled = !autoNMinusOneEnabled;
+      AudioEngine.click();
+      const ruleLabel = document.getElementById("rule-label");
+      const ruleToggleBtn = document.getElementById("rule-toggle-btn");
+      const ruleDot = document.getElementById("rule-dot");
+
+      if (autoNMinusOneEnabled) {
+        ruleLabel.textContent = "RULE: N-1 AUTO + OVERRIDE";
+        ruleToggleBtn.textContent = "SWITCH TO STRICT";
+        ruleDot.style.background = "var(--cyan)";
+        ruleDot.style.boxShadow = "0 0 8px var(--cyan)";
+      } else {
+        ruleLabel.textContent = "RULE: STRICT MANUAL OVERRIDE";
+        ruleToggleBtn.textContent = "SWITCH TO N-1";
+        ruleDot.style.background = "var(--gold)";
+        ruleDot.style.boxShadow = "0 0 8px var(--gold)";
+      }
+      renderAll();
+    }
+
+    function editGoal(g) {
+      AudioEngine.click();
+      const currentTitle = GOALS[g].title;
+      const currentDuration = GOALS[g].duration;
+      const newTitle = prompt("Edit Goal Title:", currentTitle);
+      if (newTitle !== null && newTitle.trim() !== "") {
+        GOALS[g].title = newTitle.trim();
+        const newDuration = prompt("Target Duration (e.g. 2h, 45m, 1.5h):", currentDuration);
+        if (newDuration !== null && newDuration.trim() !== "") {
+          GOALS[g].duration = newDuration.trim();
+        }
+        renderAll();
+      }
+    }
+
+    function addNewGoal() {
+      AudioEngine.click();
+      const title = prompt("Enter new goal name (e.g. OMSCS Study):");
+      if (title && title.trim() !== "") {
+        const duration = prompt("Target duration (e.g. 1h, 45m):", "1h") || "1h";
+        const newId = GOALS.length;
+        GOALS.push({ id: newId, title: title.trim(), duration: duration.trim() });
+        for (let d = 0; d < 7; d++) {
+          gridData[d].push(false);
+        }
+        renderAll();
+      }
+    }
+
+    function resetSampleData() {
+      AudioEngine.click();
+      GOALS.length = 0;
+      GOALS.push(
+        { id: 0, title: "OMSCS Study", duration: "2h" },
+        { id: 1, title: "Run / Gym", duration: "45m" },
+        { id: 2, title: "Reading", duration: "30m" },
+        { id: 3, title: "Coding", duration: "1.5h" },
+        { id: 4, title: "Hydration", duration: "3L" }
+      );
+      gridData = [
+        [true,  true,  true,  true,  true ],
+        [true,  true,  true,  true,  false],
+        [true,  false, true,  false, false],
+        [true,  true,  true,  true,  true ],
+        [false, true,  true,  true,  true ],
+        [false, true,  false, false, true ],
+        [true,  true,  false, false, true ]
+      ];
+      manualOverrides = new Set([2]);
+      selectedDayIndex = 6;
+      autoNMinusOneEnabled = true;
+      toggleHybridRule();
+      if (!autoNMinusOneEnabled) toggleHybridRule();
+      renderAll();
+    }
+
+    // --- Rendering Pipelines ---
+    function renderMatrix() {
+      // 1. Goal Header Columns
+      const headerContainer = document.getElementById("matrix-goals-header");
+      headerContainer.innerHTML = GOALS.map(g => `
+        <div class="matrix-goal-col-th editable" onclick="editGoal(${g.id})" title="Click to edit goal title and target">
+          <span class="matrix-goal-col-title">${g.title}</span>
+          <span class="matrix-goal-col-dur">• ${g.duration}</span>
+        </div>
+      `).join("");
+
+      // 2. Day Rows
+      const rowsContainer = document.getElementById("matrix-rows-container");
+      rowsContainer.innerHTML = DAYS.map((day, d) => {
+        const isToday = d === 6;
+        const status = computeDayStatus(d);
+
+        const starsHtml = GOALS.map((_, g) => {
+          const isDone = gridData[d][g];
+          return `
+            <button class="matrix-star-cell ${isDone ? 'active' : ''}" 
+                    onclick="toggleStar(${d}, ${g}, this)" 
+                    title="${GOALS[g].title}">
+              <span class="star-icon">★</span>
+            </button>
+          `;
+        }).join("");
+
+        let winHtml = `<div class="win-empty-circle"></div>`;
+        if (status.isWon) {
+          if (status.manualWon) {
+            winHtml = `<span class="win-badge-pill ovr">★ OVR</span>`;
+          } else {
+            winHtml = `<span class="win-badge-pill">★ WON</span>`;
+          }
+        }
+
+        return `
+          <div class="matrix-row ${isToday ? 'is-today' : ''}">
+            <button class="matrix-day-btn ${isToday ? 'today' : ''}" onclick="zoomToDay(${d})" title="Zoom into ${day}">
+              <span class="matrix-day-code">${day}</span>
+              ${isToday ? '<div class="matrix-day-dot"></div>' : ''}
+            </button>
+            <div class="matrix-row-goals">
+              ${starsHtml}
+            </div>
+            <button class="matrix-win-cell" onclick="toggleWinOverride(${d})" title="Toggle win status for ${day}">
+              ${winHtml}
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderDailyFocus() {
+      // 1. Date Pills
+      const pillsContainer = document.getElementById("daily-date-pills");
+      pillsContainer.innerHTML = DAYS.map((day, d) => {
+        const isActive = d === selectedDayIndex;
+        const isToday = d === 6;
+        const status = computeDayStatus(d);
+        return `
+          <button class="date-pill ${isActive ? 'active' : ''} ${isToday ? 'is-today' : ''}" onclick="selectDailyDay(${d})">
+            <span class="date-pill-day">${day}</span>
+            ${status.isWon ? '<span class="date-pill-win-icon">★</span>' : '<span style="height:8px"></span>'}
+          </button>
+        `;
+      }).join("");
+
+      // 2. 3-Column Goals Table
+      const goalsContainer = document.getElementById("daily-goals-container");
+      goalsContainer.innerHTML = GOALS.map((goal, g) => {
+        const isDone = gridData[selectedDayIndex][g];
+        const streak = calculateStreakForGoal(g);
+        const idxStr = String(g + 1).padStart(2, '0');
+
+        return `
+          <div class="daily-goal-row">
+            <div class="daily-goal-meta">
+              <div class="daily-goal-title-wrap">
+                <span class="daily-goal-idx">${idxStr}</span>
+                <span class="daily-goal-name editable" onclick="editGoal(${g})" title="Click to rename goal">${goal.title} <span class="edit-icon">✎</span></span>
+              </div>
+              <div class="daily-goal-dur editable" onclick="editGoal(${g})" title="Click to edit target duration">
+                <span>⏱</span> ${goal.duration}
+              </div>
+            </div>
+
+            <button class="daily-star-btn ${isDone ? 'active' : ''}" onclick="toggleStar(${selectedDayIndex}, ${g}, this)">
+              <span class="star-icon">★</span>
+            </button>
+
+            <div class="daily-streak-badge ${streak > 0 ? 'active' : ''}">
+              <span>🔥</span> ${streak}d
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // 3. Prominent "Did you win the day?" Button State
+      const status = computeDayStatus(selectedDayIndex);
+      const winBtn = document.getElementById("daily-win-btn");
+      const winTitle = document.getElementById("daily-win-title");
+      const winSub = document.getElementById("daily-win-sub");
+      const badgeSlot = document.getElementById("daily-win-badge-slot");
+
+      if (status.isWon) {
+        winBtn.classList.add("won");
+        winTitle.textContent = "Day Won ★";
+        if (status.autoWon) {
+          winSub.textContent = `Target Met (${status.completed}/${status.total} Goals Completed)`;
+          badgeSlot.innerHTML = `<div class="win-day-status-pill">✓ AUTO WIN</div>`;
+        } else {
+          winSub.textContent = `Manual Override Active (Tap to remove)`;
+          badgeSlot.innerHTML = `<div class="win-day-status-pill" style="color:var(--gold);border-color:rgba(255,215,0,0.4)">✓ OVERRIDE</div>`;
+        }
+      } else {
+        winBtn.classList.remove("won");
+        winTitle.textContent = "Did you win the day?";
+        winSub.textContent = `${status.completed}/${status.total} goals met • Tap to claim manual override`;
+        badgeSlot.innerHTML = `<div class="win-day-claim-pill">CLAIM WIN</div>`;
+      }
+    }
+
+    function renderTelemetry() {
+      const stats = computeAggregateStats();
+
+      // Weekly
+      document.getElementById("telemetry-weekly-pct").textContent = `${stats.weeklyPct}%`;
+      document.getElementById("telemetry-weekly-sub").textContent = `${stats.weekWins}/7 Days Won`;
+      document.getElementById("telemetry-weekly-bar").style.width = `${stats.weeklyPct}%`;
+
+      // Monthly
+      document.getElementById("telemetry-monthly-pct").textContent = `${stats.monthlyPct}%`;
+      document.getElementById("telemetry-monthly-sub").textContent = `${stats.totalMonthlyWins}/30 Days Won`;
+      document.getElementById("telemetry-monthly-bar").style.width = `${stats.monthlyPct}%`;
+    }
+
+    function renderAll() {
+      renderMatrix();
+      renderDailyFocus();
+      renderTelemetry();
+    }
+
+    // Set Live Clock
+    function updateClock() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById("current-time").textContent = `${h}:${m}`;
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    // Initial render
+    renderAll();
+  </script>
+</body>
 </html>

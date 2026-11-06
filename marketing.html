@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Coeta is a private, on-device system for building the habits your goals depend on. Track daily systems, reflect with local AI, and adapt to your body's recovery. Your data stays on your device and in your own iCloud — never on our servers." />
+  <title>Coeta — Systems for the person you're becoming</title>
+
+  <link rel="stylesheet" href="./tokens.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+  <!-- Iridescent ambient field -->
+  <div class="aurora" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#top" aria-label="Coeta home">
+        <img src="./assets/logos/mntm-icon.png" alt="" width="30" height="30" />
+        <span>Coeta</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#system">The system</a>
+        <a href="#screens">Inside the app</a>
+        <a href="#workflow">How it works</a>
+        <a href="#compare">Why on-device</a>
+      </nav>
+      <div class="nav-utilities">
+        <a class="cta-primary" data-download-platform="iphone" href="#">Download</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Systems over goals</p>
+          <h1>You don't rise to your goals. You fall to the level of your&nbsp;<span class="grad-text">systems</span>.</h1>
+          <p class="lead">
+            Dreaming is easy. Building the habits that get you there is the real work.
+            Coeta turns your week into a quiet, private operating system — track the
+            systems you commit to, reflect to correct your own patterns, and adapt
+            automatically to how your body is recovering.
+          </p>
+          <div class="hero-actions">
+            <a class="cta-primary" data-download-platform="iphone" href="#">Download for iOS</a>
+            <a class="cta-secondary" href="#workflow">See how it works</a>
+          </div>
+          <div class="hero-meta">
+            <div class="meta-item">
+              <span class="meta-value">100%</span>
+              <span class="meta-label">On-device intelligence</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-value">Offline</span>
+              <span class="meta-label">Works with no connection</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-value">Zero</span>
+              <span class="meta-label">Data sent to our servers</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <!-- Playable weekly board matching iOS WinBoard topology -->
+          <div class="board-panel" id="win-board-sim">
+            <div class="panel-header">
+              <span class="panel-title">WIN BOARD™</span>
+              <span class="panel-hint">TAP STARS TO LOG WINS</span>
+            </div>
+
+            <div class="wb-matrix" id="win-board-matrix">
+              <!-- Matrix header & 7 day rows dynamically rendered by script.js -->
+            </div>
+
+            <div class="sim-telemetry">
+              <div class="sim-progress-meta">
+                <span class="sim-progress-label">Weekly progress</span>
+                <span class="sim-progress-value" id="sim-score-value">0.0%</span>
+              </div>
+              <div class="sim-progress-bar-container">
+                <div class="sim-progress-bar-fill" id="sim-progress-fill"></div>
+              </div>
+              <div class="sim-progress-meta" style="text-align:right;">
+                <span class="sim-progress-label">State</span>
+                <span class="sim-progress-value grad-text" id="sim-status-value">Getting started</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature bento -->
+    <section id="system" class="section reveal">
+      <div class="shell">
+        <div class="section-head center">
+          <p class="eyebrow">The system</p>
+          <h2>Four modules for the person you're becoming.</h2>
+          <p class="lead">
+            Stop measuring the finish line. Start measuring the days. Coeta gives you
+            the tools to track your consistency, understand where you get stuck, and build
+            routines that hold.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Win Board -->
+          <div class="bento-card col-8">
+            <div class="bento-card-content">
+              <span class="feature-tag">01 — Execution</span>
+              <h3>The Win Board</h3>
+              <p>
+                Measure your systems every day, not your dreams. The Win Board turns each
+                commitment into a cell on a weekly grid. Progress scales smoothly as you
+                fill it in, so small, consistent wins visibly compound. Hit your marks,
+                fill the grid, win the week.
+              </p>
+            </div>
+            <div class="bento-visual">
+              <div class="mini-board" aria-hidden="true">
+                <span class="mini-cell on"></span><span class="mini-cell on"></span><span class="mini-cell on"></span><span class="mini-cell"></span><span class="mini-cell on"></span><span class="mini-cell"></span><span class="mini-cell"></span>
+                <span class="mini-cell on"></span><span class="mini-cell on"></span><span class="mini-cell"></span><span class="mini-cell on"></span><span class="mini-cell on"></span><span class="mini-cell"></span><span class="mini-cell"></span>
+                <span class="mini-cell on"></span><span class="mini-cell"></span><span class="mini-cell on"></span><span class="mini-cell on"></span><span class="mini-cell on"></span><span class="mini-cell on"></span><span class="mini-cell"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reflection -->
+          <div class="bento-card col-4">
+            <div class="bento-card-content">
+              <span class="feature-tag">02 — Reflection</span>
+              <h3>A journal that reads you back</h3>
+              <p>
+                Write freely at the end of the day. On-device AI surfaces the patterns
+                behind your friction — quietly, and entirely on your phone.
+              </p>
+            </div>
+            <div class="bento-visual">
+              <div class="reflect-card" aria-hidden="true">
+                <span class="reflect-line">Pattern found</span>
+                <span class="reflect-quote">Late screen time keeps pushing your mornings.</span>
+                <span class="reflect-chip">Suggestion · phone away by 21:00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recovery -->
+          <div class="bento-card col-6">
+            <div class="bento-card-content">
+              <span class="feature-tag">03 — Recovery</span>
+              <h3>It adapts to your body</h3>
+              <p>
+                A system that ignores physical reality eventually breaks. Coeta reads
+                your HRV, sleep, and resting heart rate on-device. On strained days it
+                gently eases your load so your streak survives — without the burnout.
+              </p>
+            </div>
+            <div class="bento-visual">
+              <div class="recovery-ring" aria-hidden="true">
+                <div class="ring-value grad-text">34%</div>
+                <div class="ring-label">Recovery today · eased</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Squads -->
+          <div class="bento-card col-6">
+            <div class="bento-card-content">
+              <span class="feature-tag">04 — Together</span>
+              <h3>Commit alongside your people</h3>
+              <p>
+                Propose a shared charter and vote on the week's goals together. Private,
+                invite-first channels with peer consensus — and no central feed watching
+                over your shoulder.
+              </p>
+            </div>
+            <div class="bento-visual">
+              <div class="squad-card" aria-hidden="true">
+                <div class="squad-avatars">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <div class="squad-status"><span class="grad-text">4 / 4 agreed</span> · charter active</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screens -->
+    <section id="screens" class="section reveal">
+      <div class="shell">
+        <div class="section-head center">
+          <p class="eyebrow">Inside the app</p>
+          <h2>Calm, focused, unmistakably yours.</h2>
+          <p class="lead">
+            A closer look at Coeta on iOS. New captures coming soon.
+          </p>
+        </div>
+
+        <div class="screenshot-grid">
+          <figure class="screenshot-card">
+            <img src="./assets/screenshots/screen-1.png" alt="Coeta Win Board" onerror="this.closest('.screenshot-card').classList.add('empty')" />
+            <figcaption>01 — The Win Board</figcaption>
+          </figure>
+          <figure class="screenshot-card">
+            <img src="./assets/screenshots/screen-2.png" alt="Coeta weekly setup" onerror="this.closest('.screenshot-card').classList.add('empty')" />
+            <figcaption>02 — Weekly setup</figcaption>
+          </figure>
+          <figure class="screenshot-card">
+            <img src="./assets/screenshots/screen-3.png" alt="Coeta reflective journal" onerror="this.closest('.screenshot-card').classList.add('empty')" />
+            <figcaption>03 — Reflective journal</figcaption>
+          </figure>
+          <figure class="screenshot-card">
+            <img src="./assets/screenshots/screen-4.png" alt="Coeta squads" onerror="this.closest('.screenshot-card').classList.add('empty')" />
+            <figcaption>04 — Squads</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="workflow" class="section reveal">
+      <div class="shell workflow-layout">
+        <div class="workflow-sticky">
+          <p class="eyebrow">How it works</p>
+          <h2>Capture. Reflect. Recalibrate.</h2>
+          <p class="lead">
+            Coeta replaces open-loop tracking with a simple daily loop. Your reflections
+            and your recovery quietly reshape next week's plan.
+          </p>
+        </div>
+
+        <div class="workflow-timeline">
+          <div class="workflow-node">
+            <span class="workflow-bullet"></span>
+            <h3><span class="grad-text">01</span> Capture</h3>
+            <p>
+              Do the work. Check off wins on the grid, or speak your raw, unfiltered
+              thoughts straight into a private, on-device journal.
+            </p>
+          </div>
+          <div class="workflow-node">
+            <span class="workflow-bullet"></span>
+            <h3><span class="grad-text">02</span> Reflect</h3>
+            <p>
+              Local intelligence reads your entries back to you — the trends, the blockers,
+              the places you slipped. You grow by understanding your patterns, not ignoring them.
+            </p>
+          </div>
+          <div class="workflow-node">
+            <span class="workflow-bullet"></span>
+            <h3><span class="grad-text">03</span> Recalibrate</h3>
+            <p>
+              Coeta reads your recovery. Strained days scale your targets down; strong
+              days dial them up. Consistency, without the crash.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compare -->
+    <section id="compare" class="section reveal">
+      <div class="shell">
+        <div class="section-head center">
+          <p class="eyebrow">Why on-device</p>
+          <h2>Private by architecture, not by promise.</h2>
+          <p class="lead">
+            Most trackers send your habits, journals, and health signals to their servers.
+            Coeta is built the other way around.
+          </p>
+        </div>
+
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Coeta</th>
+                <th scope="col">Typical cloud tracker</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Where your data lives</strong></td>
+                <td class="spec-yes">On your device, plus your private iCloud</td>
+                <td class="spec-no">Company cloud servers</td>
+              </tr>
+              <tr>
+                <td><strong>Your journals &amp; reflections</strong></td>
+                <td class="spec-yes">Backed up to your own iCloud — never to our servers</td>
+                <td class="spec-no">Streamed to third-party APIs</td>
+              </tr>
+              <tr>
+                <td><strong>The intelligence engine</strong></td>
+                <td class="spec-yes">Runs locally (Apple Intelligence + on-device models)</td>
+                <td class="spec-no">Remote cloud LLMs</td>
+              </tr>
+              <tr>
+                <td><strong>Works offline</strong></td>
+                <td class="spec-yes">Fully — the app is local-first</td>
+                <td class="spec-no">Needs a connection</td>
+              </tr>
+              <tr>
+                <td><strong>Health data</strong></td>
+                <td class="spec-yes">Read-only from Apple Health, used on-device</td>
+                <td class="spec-no">Manual entry, no recovery logic</td>
+              </tr>
+              <tr>
+                <td><strong>Your people</strong></td>
+                <td class="spec-yes">Invite-first, private channels</td>
+                <td class="spec-no">Public social feeds</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section reveal">
+      <div class="shell">
+        <div class="section-head center">
+          <p class="eyebrow">Questions</p>
+          <h2>Good to know</h2>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>What does "on-device intelligence" actually mean?</summary>
+            <div class="faq-item-content">
+              Unlike trackers that stream your journals to corporate servers, Coeta runs
+              its intelligence directly on your phone using Apple Intelligence and local
+              models. Summaries, pattern-finding, and goal scans are computed inside a secure
+              local sandbox. Your personal text and entries are never sent to third-party cloud AI.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>How does the recovery adjustment work?</summary>
+            <div class="faq-item-content">
+              When you enable it, Coeta reads Apple Health signals — HRV, sleep, resting
+              heart rate — strictly on-device to estimate how recovered you are. On high-strain
+              days it eases your goal load for the week so your consistency streak stays alive
+              without pushing you into burnout.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Is Coeta really offline-first?</summary>
+            <div class="faq-item-content">
+              Yes. Local storage is the source of truth. Every change is written to your device
+              first and syncs in the background only when you're online. The app works completely
+              without a connection.
+              <br><br>
+              Your journals and board are also backed up to <strong>your own private iCloud</strong>,
+              so you keep them when you change phones. That backup lives in your Apple account —
+              we never receive it, and we cannot read it.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Why systems instead of goals?</summary>
+            <div class="faq-item-content">
+              Goals describe where you want to be. Systems are the daily loops that get you there.
+              Most trackers reward far-off finish lines; Coeta tracks the next 24 hours. By
+              measuring your consistency on the Win Board and learning from your reflections, you
+              stop dreaming and start compounding.
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing CTA -->
+    <section class="section reveal">
+      <div class="shell">
+        <div class="closing-cta">
+          <h2>Build the systems. The goals follow.</h2>
+          <p class="lead">Coeta is on iOS. Your data stays with you.</p>
+          <div class="hero-actions center-actions">
+            <a class="cta-primary" data-download-platform="iphone" href="#">Download for iOS</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <p>&copy; 2026 Coeta. Your data lives on your device and in your own iCloud.</p>
+      <div class="footer-links">
+        <a href="./privacy.html">Privacy</a>
+        <a href="./terms.html">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js" defer></script>
+</body>
+</html>
