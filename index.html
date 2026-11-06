@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>The Win Board</title>
   <style>
     /* ==========================================================================
@@ -448,7 +451,7 @@
       font-family: var(--font-mono);
       font-size: 10px;
       font-weight: 700;
-      color: var(--gold);
+      color: var(--cyan);
       height: 38px;
     }
 
@@ -524,8 +527,8 @@
       transition: all var(--transition-spring);
     }
     .matrix-star-cell.active .star-icon {
-      color: var(--gold);
-      text-shadow: 0 0 10px var(--gold-glow);
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
       transform: scale(1.15);
     }
 
@@ -547,11 +550,11 @@
       height: 24px;
       border-radius: var(--radius-sm);
       background: var(--bg-navy-deep);
-      border: 1px solid rgba(255, 215, 0, 0.7);
-      color: var(--gold);
+      border: 1px solid rgba(0, 229, 255, 0.7);
+      color: var(--cyan);
       font-size: 13px;
       font-weight: 700;
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.25);
+      box-shadow: 0 0 8px rgba(0, 229, 255, 0.35);
     }
     .win-empty-circle {
       width: 14px;
@@ -619,7 +622,7 @@
     }
     .date-pill-win-icon {
       font-size: 8px;
-      color: var(--gold);
+      color: var(--cyan);
     }
     .date-pill.active .date-pill-win-icon {
       color: var(--bg-navy-deep);
@@ -735,8 +738,8 @@
       font-size: 22px;
     }
     .daily-star-btn.active .star-icon {
-      color: var(--gold);
-      text-shadow: 0 0 12px var(--gold-glow);
+      color: var(--cyan);
+      text-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
       transform: scale(1.18);
     }
 
@@ -792,8 +795,8 @@
       transition: all var(--transition-spring);
     }
     .win-day-control.won .win-day-icon {
-      color: var(--gold);
-      text-shadow: 0 0 12px var(--gold-glow);
+      color: var(--cyan);
+      text-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
       transform: scale(1.15);
     }
     .win-day-text-wrap {
