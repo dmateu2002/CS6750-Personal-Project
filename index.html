@@ -340,14 +340,6 @@
       box-shadow: 0 0 8px rgba(0, 229, 255, 0.35);
       transform: scale(1.08);
     }
-    .section-hint {
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--cyan);
-      opacity: 0.85;
-      letter-spacing: 0.05em;
-    }
-
     .matrix-table-card {
       background: var(--bg-card);
       border-radius: var(--radius-md);
@@ -357,10 +349,52 @@
       flex-direction: column;
     }
 
+    .matrix-scroll-pane {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0, 229, 255, 0.45) transparent;
+      touch-action: pan-x pan-y;
+    }
+    .matrix-scroll-pane::-webkit-scrollbar {
+      height: 5px;
+    }
+    .matrix-scroll-pane::-webkit-scrollbar-track {
+      background: rgba(5, 8, 17, 0.85);
+    }
+    .matrix-scroll-pane::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.45);
+      border-radius: 4px;
+    }
+
+    .matrix-table-inner {
+      display: flex;
+      flex-direction: column;
+      width: max-content;
+      min-width: 100%;
+    }
+
     .matrix-header-row {
       display: flex;
-      background: rgba(5, 8, 17, 0.95);
+      width: max-content;
+      min-width: 100%;
+      background: rgba(5, 8, 17, 0.98);
       border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    }
+    .sticky-col-left {
+      position: sticky;
+      left: 0;
+      z-index: 5;
+      background: #050811;
+    }
+    .sticky-col-right {
+      position: sticky;
+      right: 0;
+      z-index: 5;
+      background: #050811;
+      box-shadow: -4px 0 10px rgba(0, 0, 0, 0.6);
     }
     .matrix-day-th {
       width: 48px;
@@ -375,13 +409,10 @@
       border-right: 1px solid var(--border-subtle);
       height: 38px;
     }
-    .matrix-goals-scroll-th {
-      flex: 1;
+    .matrix-goals-header-group {
       display: flex;
-      overflow-x: auto;
-      scrollbar-width: none;
+      flex-shrink: 0;
     }
-    .matrix-goals-scroll-th::-webkit-scrollbar { display: none; }
     .matrix-goal-col-th {
       width: 72px;
       flex-shrink: 0;
@@ -420,11 +451,14 @@
       font-weight: 700;
       color: var(--text-dim);
       height: 38px;
+      border-left: 1px solid var(--border-subtle);
     }
 
     /* Day Rows */
     .matrix-row {
       display: flex;
+      width: max-content;
+      min-width: 100%;
       border-bottom: 1px solid rgba(33, 38, 45, 0.6);
       transition: background 0.15s ease;
     }
@@ -438,7 +472,6 @@
       width: 48px;
       flex-shrink: 0;
       height: 44px;
-      background: none;
       border: none;
       border-right: 1px solid var(--border-subtle);
       display: flex;
@@ -449,8 +482,8 @@
       gap: 2px;
       transition: all var(--transition-smooth);
     }
-    .matrix-day-btn:hover {
-      background: rgba(0, 229, 255, 0.08);
+    .matrix-row.is-today .matrix-day-btn {
+      background: #08111e;
     }
     .matrix-day-code {
       font-family: var(--font-mono);
@@ -468,13 +501,10 @@
       background: var(--cyan);
     }
 
-    .matrix-row-goals {
-      flex: 1;
+    .matrix-row-goals-group {
       display: flex;
-      overflow-x: auto;
-      scrollbar-width: none;
+      flex-shrink: 0;
     }
-    .matrix-row-goals::-webkit-scrollbar { display: none; }
     .matrix-star-cell {
       width: 72px;
       flex-shrink: 0;
@@ -508,8 +538,11 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      background: none;
       border: none;
+      border-left: 1px solid var(--border-subtle);
+    }
+    .matrix-row.is-today .matrix-win-cell {
+      background: #08111e;
     }
     .win-badge-pill {
       display: inline-flex;
@@ -1220,22 +1253,25 @@
               <span>✏️</span>
             </button>
           </div>
-          <span class="section-hint">TAP ANY DAY LABEL TO ZOOM ➔</span>
         </div>
 
         <div class="matrix-table-card">
-          <!-- Table Header -->
-          <div class="matrix-header-row">
-            <div class="matrix-day-th">DAY</div>
-            <div class="matrix-goals-scroll-th" id="matrix-goals-header">
-              <!-- Dynamically populated goal headers -->
-            </div>
-            <div class="matrix-win-th">WIN</div>
-          </div>
+          <div class="matrix-scroll-pane">
+            <div class="matrix-table-inner">
+              <!-- Table Header -->
+              <div class="matrix-header-row">
+                <div class="matrix-day-th sticky-col-left">DAY</div>
+                <div class="matrix-goals-header-group" id="matrix-goals-header">
+                  <!-- Dynamically populated goal headers -->
+                </div>
+                <div class="matrix-win-th sticky-col-right">WIN</div>
+              </div>
 
-          <!-- 7 Day Rows (Mon .. Sun) -->
-          <div id="matrix-rows-container">
-            <!-- Dynamically populated day rows -->
+              <!-- 7 Day Rows (Mon .. Sun) -->
+              <div id="matrix-rows-container">
+                <!-- Dynamically populated day rows -->
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1837,14 +1873,14 @@
 
         return `
           <div class="matrix-row ${isToday ? 'is-today' : ''}">
-            <button class="matrix-day-btn ${isToday ? 'today' : ''}" onclick="zoomToDay(${d})" title="Zoom into ${day}">
+            <button class="matrix-day-btn sticky-col-left ${isToday ? 'today' : ''}" onclick="zoomToDay(${d})" title="Zoom into ${day}">
               <span class="matrix-day-code">${day}</span>
               ${isToday ? '<div class="matrix-day-dot"></div>' : ''}
             </button>
-            <div class="matrix-row-goals">
+            <div class="matrix-row-goals-group">
               ${starsHtml}
             </div>
-            <button class="matrix-win-cell" onclick="handleWinCellClick(${d})" title="Click to manage win status for ${day}">
+            <button class="matrix-win-cell sticky-col-right" onclick="handleWinCellClick(${d})" title="Click to manage win status for ${day}">
               ${winHtml}
             </button>
           </div>
